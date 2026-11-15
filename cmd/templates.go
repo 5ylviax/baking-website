@@ -1,15 +1,52 @@
 package main
 
-import "html/template"
+import (
+	"errors"
+	"html/template"
+	"path/filepath"
+)
 
-// parseTemplates loads every template once at startup into a single set.
-// ParseGlob doesn't search subfolders, so each folder gets its own glob.
-// Every {{define "name"}} must be unique across all files, or a later
-// file silently replaces an earlier one.
-func parseTemplates() (*template.Template, error) {
-	ts, err := template.ParseGlob("./templates/page/*.html")
+// templateData holds everything a page might show.
+// Add a field here when a page needs new data.
+type templateData struct {
+	Menu []menuCategory
+}
+
+// newTemplateCache parses every page once at startup. Each page gets its own
+// template set (base + partials + that page), so every page can define its own
+// "title" and "main" without overwriting the others.
+func newTemplateCache() (map[string]*template.Template, error) {
+	cache := map[string]*template.Template{}
+
+	pages, err := filepath.Glob("./templates/page/*.html")
 	if err != nil {
 		return nil, err
 	}
-	return ts.ParseGlob("./templates/partials/*.html")
+	// Glob doesn't fail when nothing matches (e.g. the server was started
+	// from the wrong folder), so stop here instead of serving 500s later.
+	if len(pages) == 0 {
+		return nil, errors.New("no templates found in ./templates/page: run the server from the project folder")
+	}
+
+	for _, page := range pages {
+		name := filepath.Base(page)
+
+		ts, err := template.New(name).ParseFiles("./templates/base.html")
+		if err != nil {
+			return nil, err
+		}
+
+		ts, err = ts.ParseGlob("./templates/partials/*.html")
+		if err != nil {
+			return nil, err
+		}
+
+		ts, err = ts.ParseFiles(page)
+		if err != nil {
+			return nil, err
+		}
+
+		cache[name] = ts
+	}
+	return cache, nil
 }

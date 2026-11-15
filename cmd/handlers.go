@@ -28,7 +28,7 @@ func (app *App) handleMenu(w http.ResponseWriter, r *http.Request) {
 		menu[i] = c
 	}
 
-	app.render(w, "menu", menu)
+	app.render(w, http.StatusOK, "menu.html", &templateData{Menu: menu})
 }
 
 // existingPhotos returns the names that have a file in static/img.
@@ -43,9 +43,9 @@ func existingPhotos(names []string) []string {
 }
 
 func (app *App) handleAbout(w http.ResponseWriter, r *http.Request) {
-	app.render(w, "about", nil)
+	app.render(w, http.StatusOK, "about.html", &templateData{})
 }
 
 func (app *App) handleContact(w http.ResponseWriter, r *http.Request) {
-	app.render(w, "contact", nil)
+	app.render(w, http.StatusOK, "contact.html", &templateData{})
 }

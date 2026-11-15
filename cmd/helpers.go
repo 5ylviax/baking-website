@@ -7,12 +7,23 @@ import (
 	"runtime/debug"
 )
 
-func (app *App) render(w http.ResponseWriter, name string, data any) {
+// render looks up a page (e.g. "menu.html") in the template cache and runs
+// its "base" layout. It renders into a buffer first, so a template error
+// sends a clean 500 instead of half a page.
+func (app *App) render(w http.ResponseWriter, status int, page string, data *templateData) {
+	ts, ok := app.templateCache[page]
+	if !ok {
+		app.serverError(w, fmt.Errorf("the template %s does not exist", page))
+		return
+	}
+
 	var buf bytes.Buffer
-	if err := app.templates.ExecuteTemplate(&buf, name, data); err != nil {
+	if err := ts.ExecuteTemplate(&buf, "base", data); err != nil {
 		app.serverError(w, err)
 		return
 	}
+
+	w.WriteHeader(status)
 	buf.WriteTo(w)
 }
 
