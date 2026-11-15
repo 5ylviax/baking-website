@@ -2,3 +2,6 @@
 *.mod text eol=lf
 *.sum text eol=lf
 *.go text eol=lf
+
+# Server deploy tooling, not part of the app: leave it out of GitHub's language stats
+setup-baking-cd.py linguist-detectable=false
