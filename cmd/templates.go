@@ -7,11 +7,8 @@ import "html/template"
 // Every {{define "name"}} must be unique across all files, or a later
 // file silently replaces an earlier one.
 func parseTemplates() (*template.Template, error) {
-	ts, err := template.ParseGlob("./templates/*.html")
+	ts, err := template.ParseGlob("./templates/page/*.html")
 	if err != nil {
-		return nil, err
-	}
-	if ts, err = ts.ParseGlob("./templates/page/*.html"); err != nil {
 		return nil, err
 	}
 	return ts.ParseGlob("./templates/partials/*.html")

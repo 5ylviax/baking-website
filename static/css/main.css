@@ -120,89 +120,7 @@ body > * {
   background: url("/static/img/papel-picado.svg?v=animals") repeat-x left top / auto 100%;
 }
 
-/* Front page: four bread boxes */
-.breads {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px 16px;
-}
-
-.bread-grid {
-  display: grid;
-  grid-template-columns: 1fr;            /* phones: one box per row */
-  gap: 16px;
-}
-
-@media (min-width: 600px) {
-  .bread-grid {
-    grid-template-columns: repeat(2, 1fr); /* tablets and desktop: 2 x 2 */
-  }
-}
-
-.bread-box {
-  margin: 0;                /* <figure> has a default margin */
-  background-color: #ffffff;
-  border: 1px solid #e6d8c3;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-/* 16:9 boxes, the same shape as 1920x1080 photos, so the whole photo shows.
-   A photo of another shape gets cropped to fill the box. */
-.bread-box img,
-.bread-placeholder {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-.bread-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f5ead9;
-  color: #8a6d4b;
-}
-
-/* Photo slider: the track scrolls sideways and snaps to one photo at a
-   time, so phones can swipe. main.js wires up the arrows and the big
-   photo view. */
-.slider {
-  position: relative;
-}
-
-/* On computers the arrows only show when the mouse is over the photo.
-   Touch screens always show them. */
-@media (hover: hover) {
-  .slider .slider-btn {
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .slider:hover .slider-btn,
-  .slider .slider-btn:focus-visible {
-    opacity: 1;
-  }
-}
-
-.slider-track {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;      /* hide the scrollbar (Firefox) */
-}
-
-.slider-track::-webkit-scrollbar {
-  display: none;              /* hide the scrollbar (Chrome, Safari) */
-}
-
-.slider-track img {
-  flex: 0 0 100%;             /* each photo fills the whole box */
-  scroll-snap-align: start;
-  cursor: zoom-in;            /* click opens the big photo view */
-}
-
+/* Round arrow buttons in the big photo view */
 .slider-btn {
   position: absolute;
   top: 50%;
@@ -220,14 +138,6 @@ body > * {
 
 .slider-btn:hover {
   background-color: #ffffff;
-}
-
-.slider-prev {
-  left: 8px;
-}
-
-.slider-next {
-  right: 8px;
 }
 
 /* Big photo view: covers the screen with a dark background. */
@@ -295,20 +205,7 @@ body:has(.lightbox[open]) {
   background-color: #ffffff;
 }
 
-.bread-box figcaption {
-  padding: 12px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.bread-price {
-  display: block;             /* own line, under the name */
-  margin-top: 4px;
-  font-weight: normal;
-  color: #666666;
-}
-
-/* Menu, About and Contact pages: the same centered column as the front page */
+/* Menu, About and Contact pages: one centered column */
 .menu,
 .page {
   box-sizing: border-box;

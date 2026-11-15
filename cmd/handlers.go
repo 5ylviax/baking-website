@@ -4,45 +4,16 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
-type bread struct {
-	Name   string
-	Images []string
-	Photos []string
-	Price  string // from menu.json, matched by name
-}
-
-var frontPageBreads = []bread{
-	{Name: "Pan de muerto", Images: []string{"pan-de-muerto-1.jpg", "pan-de-muerto-2.jpg", "pan-de-muerto-3.jpg"}},
-	{Name: "Pan 2", Images: []string{"pan2.jpg"}},
-	{Name: "Pan 3", Images: []string{"pan3.jpg"}},
-	{Name: "Pan 4", Images: []string{"pan4.jpg"}},
-}
-
+// The menu is the home page, so "/" shows it (the Let's Go home handler).
+// "/" also catches every unknown path, so anything else is a 404.
 func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		app.notFound(w)
 		return
 	}
-
-	// Checked on every request so a new photo shows up without a restart.
-	breads := make([]bread, len(frontPageBreads))
-	copy(breads, frontPageBreads)
-	prices := make(map[string]string)
-	for _, c := range app.menu {
-		for _, item := range c.Items {
-			prices[strings.ToLower(item.Name)] = item.Price
-		}
-	}
-
-	for i := range breads {
-		breads[i].Photos = existingPhotos(breads[i].Images)
-		breads[i].Price = prices[strings.ToLower(breads[i].Name)]
-	}
-
-	app.render(w, "index", breads)
+	app.handleMenu(w, r)
 }
 
 func (app *App) handleMenu(w http.ResponseWriter, r *http.Request) {
