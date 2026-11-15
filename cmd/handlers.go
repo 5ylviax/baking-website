@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"panaderia.de.santiago.net/internal/services"
 )
 
 // The menu is the home page, so "/" shows it (the Let's Go home handler).
@@ -17,9 +19,9 @@ func (app *App) handleIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) handleMenu(w http.ResponseWriter, r *http.Request) {
-	menu := make([]menuCategory, len(app.menu))
+	menu := make([]services.MenuCategory, len(app.menu))
 	for i, c := range app.menu {
-		items := make([]menuItem, len(c.Items))
+		items := make([]services.MenuItem, len(c.Items))
 		for j, item := range c.Items {
 			item.Photos = existingPhotos(item.Images)
 			items[j] = item

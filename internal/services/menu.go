@@ -1,4 +1,4 @@
-package main
+package services
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type menuItem struct {
+type MenuItem struct {
 	Name        string   `json:"name"`
 	Price       string   `json:"price"`
 	Description string   `json:"description"`
@@ -16,15 +16,15 @@ type menuItem struct {
 	Photos      []string `json:"-"`
 }
 
-type menuCategory struct {
+type MenuCategory struct {
 	Name  string     `json:"category"`
 	ID    string     `json:"-"`
-	Items []menuItem `json:"items"`
+	Items []MenuItem `json:"items"`
 }
 
-// loadMenu reads data/menu.json. It runs once at startup: restart the
+// LoadMenu reads data/menu.json. It runs once at startup: restart the
 // server after editing the menu.
-func loadMenu(path string) ([]menuCategory, error) {
+func LoadMenu(path string) ([]MenuCategory, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -32,11 +32,11 @@ func loadMenu(path string) ([]menuCategory, error) {
 	return parseMenu(data)
 }
 
-func parseMenu(data []byte) ([]menuCategory, error) {
+func parseMenu(data []byte) ([]MenuCategory, error) {
 	dec := json.NewDecoder(bytes.NewReader(data))
 	dec.DisallowUnknownFields() // catches typos like "prize" or "image"
 
-	var menu []menuCategory
+	var menu []MenuCategory
 	if err := dec.Decode(&menu); err != nil {
 		return nil, fmt.Errorf("menu.json: %w", err)
 	}

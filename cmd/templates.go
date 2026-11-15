@@ -4,12 +4,14 @@ import (
 	"errors"
 	"html/template"
 	"path/filepath"
+
+	"panaderia.de.santiago.net/internal/services"
 )
 
 // templateData holds everything a page might show.
 // Add a field here when a page needs new data.
 type templateData struct {
-	Menu []menuCategory
+	Menu []services.MenuCategory
 }
 
 // newTemplateCache parses every page once at startup. Each page gets its own

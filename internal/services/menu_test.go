@@ -1,10 +1,10 @@
-package main
+package services
 
 import "testing"
 
 func TestMenuJSON(t *testing.T) {
-	// Tests run inside cmd/, so the menu is one folder up.
-	if _, err := loadMenu("../data/menu.json"); err != nil {
+	// Tests run inside internal/services/, so the menu is two folders up.
+	if _, err := LoadMenu("../../data/menu.json"); err != nil {
 		t.Fatal(err)
 	}
 }

@@ -10,13 +10,15 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"panaderia.de.santiago.net/internal/services"
 )
 
 type App struct {
 	errorLog      *log.Logger
 	infoLog       *log.Logger
 	templateCache map[string]*template.Template
-	menu          []menuCategory
+	menu          []services.MenuCategory
 }
 
 func main() {
@@ -32,7 +34,7 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
-	menu, err := loadMenu("data/menu.json")
+	menu, err := services.LoadMenu("data/menu.json")
 	if err != nil {
 		errorLog.Fatal(err)
 	}
